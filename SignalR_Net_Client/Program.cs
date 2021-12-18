@@ -16,7 +16,7 @@ namespace SignalR_Net_Client
             await connection.StartAsync();
             do
             {
-                var dataKey = "sad";
+                var dataKey = "test";
                 var info = await connection.InvokeAsync<string>("GetSomeInfoAsync", dataKey);
                 Console.WriteLine(info);
                 Console.ReadKey();
