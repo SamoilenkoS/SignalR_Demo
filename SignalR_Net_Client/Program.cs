@@ -12,15 +12,15 @@ namespace SignalR_Net_Client
                = new HubConnectionBuilder()
                .WithUrl("https://localhost:5001/communication")
                .Build();
+            connection.On<string>("ReceiveMessage",
+                (message) =>
+                {
+                    Console.WriteLine(message);
+                });
 
             await connection.StartAsync();
-            do
-            {
-                var dataKey = "test";
-                var info = await connection.InvokeAsync<string>("GetSomeInfoAsync", dataKey);
-                Console.WriteLine(info);
-                Console.ReadKey();
-            } while (true);
+
+            Console.ReadKey();
         }
     }
 }
