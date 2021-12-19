@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using SignalR_Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SignalR_Server
 {
-    public class CommunicationHub : Hub
+    public class CommunicationHub : Hub<IClientHub>, ICommunicationHub
     {
         private Dictionary<string, User> Users;
 
@@ -16,11 +17,9 @@ namespace SignalR_Server
             Users = new Dictionary<string, User>();
         }
 
-        public override Task OnConnectedAsync()
+        public override async Task OnConnectedAsync()
         {
-            Users.Add(Context.ConnectionId, new User());
-
-            return base.OnConnectedAsync();
+            await Clients.Caller.ReceiveMessage($"Your id: {Context.ConnectionId}");
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
@@ -43,6 +42,16 @@ namespace SignalR_Server
             }
 
             return response.ToString();
+        }
+
+        public async Task SendMessageToAllExceptCaller(string message)
+        {
+            await Clients.Others.ReceiveMessage(message);
+        }
+
+        public async Task SendPersonalMessage(string targetId, string message)
+        {
+            await Clients.Client(targetId).ReceiveMessage(message);
         }
     }
 }
