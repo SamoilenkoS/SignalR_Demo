@@ -10,22 +10,20 @@ namespace SignalR_Server
 {
     public class CommunicationHub : Hub<IClientHub>, ICommunicationHub
     {
-        private Dictionary<string, User> Users;
+        private readonly string _testGroupName = nameof(_testGroupName);
 
         public CommunicationHub()
         {
-            Users = new Dictionary<string, User>();
         }
 
         public override async Task OnConnectedAsync()
         {
+            await Groups.AddToGroupAsync(Context.ConnectionId, _testGroupName);
             await Clients.Caller.ReceiveMessage($"Your id: {Context.ConnectionId}");
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            Users.Remove(Context.ConnectionId);
-
             return base.OnDisconnectedAsync(exception);
         }
 
@@ -52,6 +50,11 @@ namespace SignalR_Server
         public async Task SendPersonalMessage(string targetId, string message)
         {
             await Clients.Client(targetId).ReceiveMessage(message);
+        }
+
+        public async Task SendMessageToGroup(string message)
+        {
+            await Clients.Group(_testGroupName).ReceiveMessage(message);
         }
     }
 }

@@ -10,5 +10,6 @@ namespace SignalR_Core
         Task SendPersonalMessage(string targetId, string message);
         Task SendMessageToAllExceptCaller(string message);
         Task<string> GetSomeInfoAsync(string infoKey);
+        Task SendMessageToGroup(string message);
     }
 }

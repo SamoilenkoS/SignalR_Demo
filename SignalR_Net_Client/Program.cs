@@ -28,6 +28,7 @@ namespace SignalR_Net_Client
                     $"1 - Get info{Environment.NewLine}" +
                     $"2 - Send to all except me{Environment.NewLine}" +
                     $"3 - Send personal message{Environment.NewLine}" +
+                    $"4 - Send message to group{Environment.NewLine}" +
                     $"0 - Exit");
                 choise = Convert.ToInt32(Console.ReadLine());
                 switch (choise)
@@ -52,6 +53,13 @@ namespace SignalR_Net_Client
                         await connection.InvokeAsync(
                             nameof(ICommunicationHub.SendPersonalMessage),
                             targetId,
+                            message);
+                        break;
+                    case 4:
+                        Console.Write("Enter message:");
+                        message = Console.ReadLine();
+                        await connection.InvokeAsync(
+                            nameof(ICommunicationHub.SendMessageToGroup),
                             message);
                         break;
                 }
