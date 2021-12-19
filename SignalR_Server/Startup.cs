@@ -38,7 +38,10 @@ namespace SignalR_Server
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<CommunicationHub>("/communication");
+                endpoints.MapHub<CommunicationHub>("/communication", x =>
+                {
+                    x.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.LongPolling;
+                });
                 endpoints.MapControllers();
             });
         }
